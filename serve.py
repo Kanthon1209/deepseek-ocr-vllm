@@ -24,11 +24,12 @@ if __name__ == '__main__':
     # 先进行参数解析再进行导入, 导入的时候就会把模块中的部分代码执行
     parser = HfArgumentParser([ServerConfig, ModelConfig, RedisConfig]) # 要传入 DataClass 数组
     server_config, model_config, redis_config = parser.parse_args_into_dataclasses(return_remaining_strings=False) # 设置成为 True 的时候会返回一个 未解析参数 数组
-    import os
-    os.environ['CUDA_VISIBLE_DEVICES'] = model_config.CUDA_VISIBLE_DEVICES
-    from config import GPU_UTILIZATION, PARALLEL_SIZE
-    GPU_UTILIZATION = model_config.gpu_memory_utilization
-    PARALLEL_SIZE = model_config.parallel_size
+    import os 
+    os.environ['CUDA_VISIBLE_DEVICES'] = model_config.CUDA_VISIBLE_DEVICES # 在 torch 加载前赋值好环境变量
+    
+    import config # import 模块, 对模块中的 常量 进行赋值操作
+    config.GPU_UTILIZATION = model_config.gpu_memory_utilization
+    config.PARALLEL_SIZE = model_config.parallel_size
 
     import uvicorn
     from main import app # 不能放到参数解析前, from main import ... 会把 main 中所有的顶层代码执行
