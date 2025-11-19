@@ -10,9 +10,10 @@ class ServerConfig:
 
 @dataclass 
 class ModelConfig:
-    CUDA_VISIBLE_DEVICES: str = field(default='2,3')
+    CUDA_VISIBLE_DEVICES: str = field(default='0') # 有的机器只有一张卡
     gpu_memory_utilization: float = field(default=0.8)
-    parallel_size: int = field(default=1)
+    parallel_size: int = field(default=1) # 默认用一张卡并行跑
+    model_path: str = field(default='/root/.cache/modelscope/hub/models/deepseek-ai/DeepSeek-OCR')
 
 @dataclass
 class RedisConfig:
@@ -30,6 +31,7 @@ if __name__ == '__main__':
     import config # import 模块, 对模块中的 常量 进行赋值操作
     config.GPU_UTILIZATION = model_config.gpu_memory_utilization
     config.PARALLEL_SIZE = model_config.parallel_size
+    config.MODEL_PATH = model_config.model_path # 设置成为本地模型路径, 注意使用绝对路径, / 开头
 
     import uvicorn
     from main import app # 不能放到参数解析前, from main import ... 会把 main 中所有的顶层代码执行

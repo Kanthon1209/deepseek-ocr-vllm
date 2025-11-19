@@ -17,7 +17,15 @@ MAX_CONCURRENCY = 100 # If you have limited GPU memory, lower the concurrency co
 NUM_WORKERS = 64 # image pre-process (resize/padding) workers 
 PRINT_NUM_VIS_TOKENS = False
 SKIP_REPEAT = True
+
 MODEL_PATH = 'deepseek-ai/DeepSeek-OCR' # change to your model path
+# 默认使用 huggingface 下载 deepseek-ai/DeepSeek-OCR
+# 但是即使设置了 export HF_ENPOINT 也还是很慢
+
+# 推荐通过 modelscope 下载
+# pip install modelscope
+# modelscope download deepseek-ai/DeepSeek-OCR # 默认下载到 ~/.cache/modelscope/hub/models/中
+# 比如 ubuntu:22.04 镜像容器会下载到 /root/.cache/modelscope/hub/models/deepseek-ai/DeepSeek-OCR 中
 
 # TODO: change INPUT_PATH
 # .pdf: run_dpsk_ocr_pdf.py; 
