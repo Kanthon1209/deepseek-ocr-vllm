@@ -4,7 +4,34 @@
 ### install
 ```bash
 
-docker run -it --name tmp ubuntu:22.04
+# # 让容器可以使用宿主机的 GPU 资源, 以下方法已经弃用, deprecated
+# distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+# curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+# curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list # T-shaped pipe fitting（T 形管道接头）把标准输入（standard input, stdin）同时输出到终端和文件
+# sudo apt update
+# sudo apt install -y nvidia-docker2 # 用来让 Docker 容器 可以直接访问 NVIDIA GPU
+# sudo systemctl restart docker
+
+# 卸载参考
+# sudo apt-get remove --purge nvidia-docker2 # --purge：彻底删除，包括配置文件
+# sudo apt-get autoremove
+
+
+# 现在已经被 NVIDIA Container Toolkit 取代
+# sudo apt install nvidia-container-toolkit 就行 # 可能会因为网络问题下载特别慢, 不用这个方法
+# 直接从 官方 release 页下载整合包, 分别安装 .deb, 这些文件都不是特别大, 所以可以在代理网络的情况下下载好, 上传到服务器上进行解压
+wget https://github.com/NVIDIA/nvidia-container-toolkit/releases/download/v1.18.0/nvidia-container-toolkit_1.18.0_deb_amd64.tar.gz
+tar -xzvf nvidia-container-toolkit_1.18.0_deb_amd64.tar.gz
+# 安装其中的四个就好
+sudo dpkg -i libnvidia-container1_1.14.1-1_amd64.deb
+sudo dpkg -i libnvidia-container-tools_1.14.1-1_amd64.deb
+sudo dpkg -i nvidia-container-toolkit-base_1.14.1-1_amd64.deb
+sudo dpkg -i nvidia-container-toolkit_1.14.1-1_amd64.deb
+# 
+sudo nvidia-ctk runtime configure --runtime=docker
+sudo systemctl restart docker
+
+docker run --gpus=all -it --name tmp ubuntu:22.04
 
 apt update
 apt install -y ubuntu-standard build-essential vim less curl wget gnupg sudo

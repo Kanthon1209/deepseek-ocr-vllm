@@ -1,1 +1,0 @@
-python run_dpsk_ocr_pdf.py
